@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\Auth\PasswordController;
 use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Admin\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\Auth\VerifyEmailController;
+use App\Http\Controllers\Admin\CkeditorController;
+use App\Http\Controllers\Admin\NewsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,9 +29,9 @@ Route::get('/', function () {
     return view('admin.welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware(['auth:admin', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('admin.dashboard');
+// })->middleware(['auth:admin', 'verified'])->name('dashboard');
 
 Route::middleware('auth:admin')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -84,5 +86,22 @@ Route::middleware('auth:admin')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
+
+    //CKEditor
+    Route::post('upload', [CkeditorController::class,'upload'])->name('ckeditor.upload');
+
+    Route::get('dashboard', [NewsController::class,'index'])->name('dashboard');
+    Route::get('show/{id}', [NewsController::class,'show'])->name('news.show');
+        
+    Route::get('create', [NewsController::class,'create'])->name('news.create');
+    Route::post('create', [NewsController::class,'store'])->name('news.store');
+
+    Route::get('edit/{id}', [NewsController::class,'edit'])->name('news.edit');
+    Route::post('update', [NewsController::class,'update'])->name('news.update');
+
+    Route::get('delete/{id}', [NewsController::class,'delete'])->name('news.delete');
+
+    Route::post('sort', [NewsController::class,'sort'])->name('news.sort');
+
 });
 
